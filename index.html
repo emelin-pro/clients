@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
   <style>
-    /* ========== СТИЛИ (полностью идентичны предыдущей версии) ========== */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', system-ui, sans-serif;
@@ -73,56 +72,60 @@
       background: #1d4ed8;
     }
 
+    /* ответственный (скрытый по умолчанию) */
     .responsible-block {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      margin-bottom: 30px;
+      cursor: pointer;
+      user-select: none;
     }
-    .responsible-row {
+    .responsible-header {
       display: flex;
       align-items: center;
       gap: 8px;
+      font-weight: 500;
+      color: #1e3a5f;
     }
-    .responsible-icon {
-      font-size: 1.4rem;
-      line-height: 1;
-    }
-    .responsible-name {
-      font-weight: 600;
-      font-size: 1rem;
+    .responsible-details {
+      margin-top: 8px;
+      padding-left: calc(1.4rem + 8px);
+      font-size: 0.95rem;
       color: #0f2b45;
-      white-space: nowrap;
+      display: none;
     }
-    .responsible-phone {
-      font-size: 0.9rem;
+    .responsible-details.expanded {
+      display: block;
+    }
+    .responsible-details .phone {
       color: #2563eb;
-      text-decoration: none;
-      margin-left: calc(1.4rem + 8px);
-      margin-top: 2px;
     }
 
+    /* горизонтальный прогресс */
     .progress-horizontal {
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
       position: relative;
       padding: 8px 0;
+      width: 100%;
     }
+    /* линия теперь рисуется через псевдоэлемент, прикреплённый к родителю */
     .progress-horizontal::before {
       content: '';
       position: absolute;
       top: 38px;
-      left: 40px;
-      right: 40px;
+      left: 0;
+      right: 0;
       height: 3px;
       background: linear-gradient(90deg, #d0dbea, #a6b8cf);
       border-radius: 6px;
       z-index: 0;
+      margin-left: 40px;
+      margin-right: 40px;
     }
     .step-h {
       position: relative;
       z-index: 2;
-      flex: 1;
+      flex: 1 1 0;
       min-width: 0;
       display: flex;
       flex-direction: column;
@@ -130,9 +133,11 @@
       text-align: center;
       background: transparent;
       border-radius: 20px;
-      transition: background 0.2s;
+      transition: flex 0.2s, background 0.2s;
+      cursor: pointer;
     }
-    .step-h.active {
+    .step-h.expanded {
+      flex: 2 1 0;
       background: #f5faff;
       box-shadow: 0 8px 22px -14px #1d4ed850, 0 0 0 1px #cddfff inset;
     }
@@ -176,6 +181,7 @@
     .active .status    { background: #e2edff; color: #1d4ed8; font-weight: 600; }
     .pending .status   { background: #f1f4f9; color: #5f6f84; }
 
+    /* описание этапа (скрыто у неактивных) */
     .step-description {
       font-size: 0.85rem;
       color: #2b4058;
@@ -188,6 +194,9 @@
       width: calc(100% - 24px);
       text-align: left;
     }
+    .step-h:not(.expanded) .step-description {
+      display: none;
+    }
     .step-description .eta {
       margin-top: 6px;
       font-weight: 500;
@@ -196,10 +205,13 @@
       align-items: center;
       gap: 4px;
     }
-    .step-h:not(.active) .step-description {
-      display: none;
+    .step-description .days-left {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #5f6f84;
     }
 
+    /* горизонтальный скролл при большом количестве этапов */
     .progress-horizontal.scrollable {
       overflow-x: auto;
       padding-bottom: 12px;
@@ -208,7 +220,11 @@
     .progress-horizontal.scrollable .step-h {
       flex: 0 0 180px;
     }
+    .progress-horizontal.scrollable .step-h.expanded {
+      flex: 0 0 260px;
+    }
 
+    /* вертикальный прогресс */
     .progress-vertical {
       display: none;
       flex-direction: column;
@@ -228,6 +244,7 @@
     .step-v {
       position: relative;
       margin-bottom: 32px;
+      cursor: pointer;
     }
     .step-v .circle {
       position: absolute;
@@ -257,6 +274,10 @@
       margin-top: 12px;
       padding-top: 12px;
       border-top: 1px dashed #cbd5e2;
+      display: none;
+    }
+    .step-v.expanded .details-text {
+      display: block;
     }
     .active .content { background: #f5faff; }
 
@@ -268,7 +289,6 @@
       .progress-horizontal { display: none; }
       .progress-vertical { display: flex; }
       .header-row { flex-direction: column; align-items: flex-start; }
-      .responsible-block { align-self: flex-end; }
     }
 
     .info-hint {
@@ -294,13 +314,16 @@
     </div>
   </div>
 
-  <!-- Блок ответственного -->
-  <div class="responsible-block" id="responsibleBlock" style="margin-bottom: 30px;">
-    <div class="responsible-row">
+  <!-- Блок ответственного (скрытый) -->
+  <div class="responsible-block" id="responsibleBlock">
+    <div class="responsible-header">
       <span class="responsible-icon">🎓</span>
-      <span class="responsible-name" id="responsibleNameDisplay">Иван Петров, клиентский менеджер</span>
+      <span>ваш координатор</span>
     </div>
-    <div class="responsible-phone" id="responsiblePhoneDisplay">+7 (999) 123-45-67</div>
+    <div class="responsible-details" id="responsibleDetails">
+      <span id="responsibleNameDisplay">Иван Петров, клиентский менеджер</span><br>
+      <span class="phone" id="responsiblePhoneDisplay">+7 (999) 123-45-67</span>
+    </div>
   </div>
 
   <!-- Горизонтальный прогресс (десктоп) -->
@@ -313,88 +336,26 @@
 
 <script>
   (function() {
-    // ====== НАСТРОЙКИ JSONBIN.IO (ваши данные) ======
     const BIN_ID = '69a5c886ae596e708f586c95';
     const API_KEY = '$2a$10$04rxd6FFWKwU6F5lh7rxfepeHDiMl50NHzePfFIwq71to/inJGDgW';
     const BASE_URL = 'https://api.jsonbin.io/v3/b';
 
-    // ====== НОВЫЕ ДАННЫЕ ПО КЕЙСУ ======
+    // Данные по умолчанию (те же, что в админке)
     const defaultData = {
       caseName: 'Стратегический аудит ситуации и выбор модели исполнения обязательств',
       clientName: 'Концедалов С.И.',
-      responsible: {
-        name: 'Иван Петров',
-        position: 'клиентский менеджер',
-        phone: '+7 (999) 123-45-67'
-      },
+      responsible: { name: 'Иван Петров', position: 'клиентский менеджер', phone: '+7 (999) 123-45-67' },
       stages: [
-        {
-          id: 0,
-          title: 'Брифинг и анализ задачи',
-          description: 'Клиентский менеджер уточняет основные моменты задачи и ожидания по результату.',
-          estimatedTime: '1 день',
-          summary: 'Проведён первичный бриф, зафиксированы цели.',
-          nextActions: 'Ожидайте коммерческое предложение.',
-          status: 'completed'
-        },
-        {
-          id: 1,
-          title: 'Подготовка коммерческого предложения',
-          description: 'Менеджер готовит КП на основе брифа, берёт тайм-аут.',
-          estimatedTime: '2 дня',
-          summary: 'КП подготовлено и направлено клиенту.',
-          nextActions: 'Рассмотрите предложение и дайте обратную связь.',
-          status: 'completed'
-        },
-        {
-          id: 2,
-          title: 'Согласование и оплата',
-          description: 'Подписание соглашения, фиксация договорённостей, внесение установочного платежа или ретейнера.',
-          estimatedTime: '3 дня',
-          summary: 'Договор подписан, оплата поступила.',
-          nextActions: 'После оплаты передайте документы и информацию.',
-          status: 'active'  // текущий этап
-        },
-        {
-          id: 3,
-          title: 'Передача информации',
-          description: 'Клиент предоставляет необходимые документы, даёт пояснения.',
-          estimatedTime: '2 дня',
-          summary: 'Все материалы получены.',
-          nextActions: '👉 Передайте документы и пояснения эксперту.',
-          status: 'pending'
-        },
-        {
-          id: 4,
-          title: 'Экспертный анализ',
-          description: 'Эксперт изучает материалы, при необходимости задаёт уточняющие вопросы.',
-          estimatedTime: '5–7 дней',
-          summary: 'Анализ завершён, подготовлены выводы.',
-          nextActions: 'Эксперт свяжется для уточнений.',
-          status: 'pending'
-        },
-        {
-          id: 5,
-          title: 'Презентация результатов',
-          description: 'Эксперт представляет итоги анализа, модели поведения, рекомендованный вариант, передаёт письменный отчёт.',
-          estimatedTime: '1 день',
-          summary: 'Презентация проведена, отчёт передан.',
-          nextActions: 'Ознакомьтесь с результатами, подготовьте вопросы.',
-          status: 'pending'
-        },
-        {
-          id: 6,
-          title: 'Обратная связь',
-          description: 'Клиентский менеджер уточняет удовлетворённость работой эксперта и готовность к реализации.',
-          estimatedTime: '1 день',
-          summary: 'Обратная связь получена, определены следующие шаги.',
-          nextActions: 'Сообщите ваши впечатления и планы.',
-          status: 'pending'
-        }
+        { id: 0, title: 'Брифинг и анализ задачи', description: 'Клиентский менеджер уточняет основные моменты задачи и ожидания по результату.', estimatedTime: '1 день', summary: 'Проведён первичный бриф, зафиксированы цели.', nextActions: 'Ожидайте коммерческое предложение.', status: 'completed', startDate: '2026-03-01', endDate: '2026-03-02' },
+        { id: 1, title: 'Подготовка коммерческого предложения', description: 'Менеджер готовит КП на основе брифа, берёт тайм-аут.', estimatedTime: '2 дня', summary: 'КП подготовлено и направлено клиенту.', nextActions: 'Рассмотрите предложение и дайте обратную связь.', status: 'completed', startDate: '2026-03-03', endDate: '2026-03-05' },
+        { id: 2, title: 'Согласование и оплата', description: 'Подписание соглашения, фиксация договорённостей, внесение установочного платежа или ретейнера.', estimatedTime: '3 дня', summary: 'Договор подписан, оплата поступила.', nextActions: 'После оплаты передайте документы и информацию.', status: 'active', startDate: '2026-03-06', endDate: '2026-03-09' },
+        { id: 3, title: 'Передача информации', description: 'Клиент предоставляет необходимые документы, даёт пояснения.', estimatedTime: '2 дня', summary: 'Все материалы получены.', nextActions: 'Передайте документы и пояснения эксперту.', status: 'pending', startDate: '2026-03-10', endDate: '2026-03-12' },
+        { id: 4, title: 'Экспертный анализ', description: 'Эксперт изучает материалы, при необходимости задаёт уточняющие вопросы.', estimatedTime: '5–7 дней', summary: 'Анализ завершён, подготовлены выводы.', nextActions: 'Эксперт свяжется для уточнений.', status: 'pending', startDate: '2026-03-13', endDate: '2026-03-20' },
+        { id: 5, title: 'Презентация результатов', description: 'Эксперт представляет итоги анализа, модели поведения, рекомендованный вариант, передаёт письменный отчёт.', estimatedTime: '1 день', summary: 'Презентация проведена, отчёт передан.', nextActions: 'Ознакомьтесь с результатами, подготовьте вопросы.', status: 'pending', startDate: '2026-03-21', endDate: '2026-03-22' },
+        { id: 6, title: 'Обратная связь', description: 'Клиентский менеджер уточняет удовлетворённость работой эксперта и готовность к реализации.', estimatedTime: '1 день', summary: 'Обратная связь получена, определены следующие шаги.', nextActions: 'Сообщите ваши впечатления и планы.', status: 'pending', startDate: '2026-03-23', endDate: '2026-03-24' }
       ]
     };
 
-    // Загрузка данных из облака (если доступно, иначе defaultData)
     async function loadData() {
       try {
         const response = await fetch(`${BASE_URL}/${BIN_ID}/latest`, {
@@ -409,30 +370,69 @@
       }
     }
 
+    // Функция подсчёта рабочих дней (без субботы и воскресенья)
+    function countWorkingDays(start, end) {
+      if (!start || !end) return null;
+      const startDate = new Date(start + 'T00:00:00');
+      const endDate = new Date(end + 'T23:59:59');
+      if (startDate > endDate) return 0;
+      let count = 0;
+      const current = new Date(startDate);
+      while (current <= endDate) {
+        const day = current.getDay(); // 0 = воскресенье, 6 = суббота
+        if (day !== 0 && day !== 6) count++;
+        current.setDate(current.getDate() + 1);
+      }
+      return count;
+    }
+
+    // Сколько рабочих дней осталось до endDate (от сегодня)
+    function remainingWorkingDays(end) {
+      if (!end) return null;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const endDate = new Date(end + 'T23:59:59');
+      if (today > endDate) return -1; // просрочено
+      let count = 0;
+      const current = new Date(today);
+      while (current <= endDate) {
+        const day = current.getDay();
+        if (day !== 0 && day !== 6) count++;
+        current.setDate(current.getDate() + 1);
+      }
+      return count;
+    }
+
     function getStatusText(status) {
       if (status === 'completed') return 'Завершено';
       if (status === 'active') return 'В работе';
-      return 'Ожидает';
+      return 'Предстоит';
     }
 
-    // Функция для форматирования текста описания с иконкой в зависимости от статуса
+    // Формирование описания с иконкой и дополнительной информацией
     function getDescriptionWithIcon(stage) {
       if (stage.status === 'active') {
-        return { icon: '⏳', text: stage.description || '', class: 'active-desc' };
+        return { icon: '⏳', text: stage.description || '' };
       } else if (stage.status === 'pending') {
-        return { icon: '👉', text: stage.nextActions || '', class: 'pending-desc' };
+        // Для предстоит: описание + предполагаемые действия
+        let text = stage.description || '';
+        if (stage.nextActions) {
+          text += `\n\n👉 Что нужно сделать: ${stage.nextActions}`;
+        }
+        return { icon: '👉', text };
       } else {
-        return { icon: '✅', text: stage.summary || '', class: 'completed-desc' };
+        return { icon: '✅', text: stage.summary || '' };
       }
     }
 
-    // Функция отрисовки
+    // Переменные для аккордеона
+    let expandedStageId = null; // id этапа, который раскрыт (по умолчанию активный)
+
     function render(data) {
-      // Клиент
       document.getElementById('clientNameDisplay').innerText = data.clientName;
       document.getElementById('caseNameDisplay').innerText = 'Кейс: ' + data.caseName;
 
-      // Прогресс: сколько завершено и общее количество
+      // Прогресс
       const total = data.stages.length;
       const completedCount = data.stages.filter(s => s.status === 'completed').length;
       const activeStage = data.stages.find(s => s.status === 'active');
@@ -450,53 +450,63 @@
       const namePart = resp.name || '';
       const positionPart = resp.position ? `, ${resp.position}` : '';
       const fullName = namePart + positionPart;
+      document.getElementById('responsibleNameDisplay').innerHTML = fullName;
+      document.getElementById('responsiblePhoneDisplay').innerText = resp.phone || '';
 
-      const nameEl = document.getElementById('responsibleNameDisplay');
-      const phoneEl = document.getElementById('responsiblePhoneDisplay');
-      const iconRow = document.querySelector('.responsible-row');
-
-      if (namePart) {
-        nameEl.innerText = fullName;
-        nameEl.style.display = 'inline';
-        iconRow.style.display = 'flex';
-      } else {
-        iconRow.style.display = 'none';
-      }
-
-      if (resp.phone) {
-        phoneEl.innerText = resp.phone;
-        phoneEl.style.display = 'block';
-      } else {
-        phoneEl.style.display = 'none';
-      }
+      // По умолчанию ответственный скрыт
+      document.getElementById('responsibleDetails').classList.remove('expanded');
 
       // --- Горизонтальный прогресс ---
       const horizContainer = document.getElementById('progressHorizontal');
       horizContainer.innerHTML = '';
+
+      // Определяем, какой этап должен быть раскрыт. По умолчанию активный.
+      if (expandedStageId === null) {
+        const active = data.stages.find(s => s.status === 'active');
+        expandedStageId = active ? active.id : null;
+      }
+
       data.stages.forEach(stage => {
         const stepDiv = document.createElement('div');
         stepDiv.className = `step-h ${stage.status}`;
+        if (stage.id === expandedStageId) stepDiv.classList.add('expanded');
         stepDiv.dataset.step = stage.id;
 
-        let inner = `
-          <div class="circle">${stage.id + 1}</div>
-          <div class="label">${stage.title}</div>
-          <div class="status">${getStatusText(stage.status)}</div>
-        `;
+        const desc = getDescriptionWithIcon(stage);
+        let etaHtml = '';
+        let daysHtml = '';
 
-        // Для активного этапа добавляем описание с иконкой
-        if (stage.status === 'active') {
-          const desc = getDescriptionWithIcon(stage);
-          let etaHtml = stage.estimatedTime ? `<div class="eta">⏱️ ${stage.estimatedTime}</div>` : '';
-          inner += `
+        // Для активного этапа добавляем информацию о днях
+        if (stage.status === 'active' && stage.startDate && stage.endDate) {
+          const totalDays = countWorkingDays(stage.startDate, stage.endDate);
+          const remaining = remainingWorkingDays(stage.endDate);
+          if (totalDays !== null) {
+            if (remaining === -1) {
+              daysHtml = `<div class="days-left">⚠️ просрочено</div>`;
+            } else {
+              daysHtml = `<div class="days-left">осталось ${remaining} из ${totalDays} рабочих дней</div>`;
+            }
+          }
+        }
+
+        // Собираем описание: иконка + текст + (если есть) daysHtml
+        let descriptionHtml = '';
+        if (desc.text) {
+          descriptionHtml = `
             <div class="step-description">
-              <div><span style="font-weight: 600;">${desc.icon}</span> ${desc.text}</div>
-              ${etaHtml}
+              <div><span style="font-weight: 600;">${desc.icon}</span> ${desc.text.replace(/\n/g, '<br>')}</div>
+              ${stage.estimatedTime ? `<div class="eta">⏱️ ${stage.estimatedTime}</div>` : ''}
+              ${daysHtml}
             </div>
           `;
         }
 
-        stepDiv.innerHTML = inner;
+        stepDiv.innerHTML = `
+          <div class="circle">${stage.id + 1}</div>
+          <div class="label">${stage.title}</div>
+          <div class="status">${getStatusText(stage.status)}</div>
+          ${descriptionHtml}
+        `;
         horizContainer.appendChild(stepDiv);
       });
 
@@ -515,9 +525,22 @@
         if (stage.status === 'active' && stage.estimatedTime) {
           detailsText += `\n⏱️ ${stage.estimatedTime}`;
         }
+        // Добавляем информацию о днях для активного
+        if (stage.status === 'active' && stage.startDate && stage.endDate) {
+          const totalDays = countWorkingDays(stage.startDate, stage.endDate);
+          const remaining = remainingWorkingDays(stage.endDate);
+          if (totalDays !== null) {
+            if (remaining === -1) {
+              detailsText += `\n⚠️ просрочено`;
+            } else {
+              detailsText += `\nосталось ${remaining} из ${totalDays} рабочих дней`;
+            }
+          }
+        }
 
         const stepDiv = document.createElement('div');
         stepDiv.className = `step-v ${stage.status}`;
+        if (stage.id === expandedStageId) stepDiv.classList.add('expanded');
         stepDiv.dataset.step = stage.id;
         stepDiv.innerHTML = `
           <div class="circle">${stage.id + 1}</div>
@@ -530,16 +553,50 @@
       });
     }
 
+    // Обработчик клика на этапе (горизонтальный)
+    function handleStageClick(e) {
+      const step = e.target.closest('.step-h, .step-v');
+      if (!step) return;
+      const stepId = step.dataset.step;
+      if (stepId === undefined) return;
+      const id = parseInt(stepId);
+
+      if (expandedStageId === id) {
+        // Если кликнули на уже открытый, закрываем? По условию всегда один открыт. Закрыть нельзя, только переключить.
+        // Оставим возможность закрыть, но по ТЗ должен быть всегда открыт один.
+        // Проще: если клик на открытый — ничего не делаем. Но чтобы можно было закрыть и открыть другой, разрешим.
+        // Лучше: всегда открываем кликнутый.
+      }
+      expandedStageId = id;
+      // Перерисовываем с новым expandedStageId
+      fetchAndRender(); // или можно обновить только классы, но проще перерисовать
+    }
+
+    // Обработчик для ответственного
+    function handleResponsibleClick() {
+      const details = document.getElementById('responsibleDetails');
+      details.classList.toggle('expanded');
+    }
+
     // Функция загрузки и обновления
     async function fetchAndRender() {
       const data = await loadData();
       render(data);
     }
 
+    // Подписка на клики
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.step-h, .step-v')) {
+        handleStageClick(e);
+      } else if (e.target.closest('#responsibleBlock')) {
+        handleResponsibleClick();
+      }
+    });
+
     // Первый запуск
     fetchAndRender();
     // Обновление каждые 5 минут
-    setInterval(fetchAndRender, 300000); // 300000 мс = 5 минут
+    setInterval(fetchAndRender, 300000);
   })();
 </script>
 </body>
