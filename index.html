@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* ========== СТИЛИ (полностью идентичны предыдущей версии) ========== */
     :root {
       --primary: #1BA1FA;
       --primary-dark: #0B7FD4;
@@ -17,7 +18,6 @@
       --green-light: #ECFDF5;
       --green-dark: #059669;
       --amber: #F59E0B;
-      --amber-light: #FEF3C7;
       --surface: #FFFFFF;
       --bg: #F3F6FA;
       --bg-subtle: #EDF1F7;
@@ -71,8 +71,9 @@
       font-size: 1.3rem;
       letter-spacing: -0.03em;
       color: var(--primary);
-      display: none;
     }
+
+    .brand-logo-text span { color: var(--text-muted); font-weight: 600; }
 
     .case-card {
       max-width: 1200px;
@@ -93,11 +94,7 @@
     }
 
     .case-sticky-header.is-sticky { position: sticky; top: 0; }
-    .case-sticky-header.stuck { 
-      padding: 16px 32px; 
-      box-shadow: 0 4px 20px -4px rgba(0,20,50,0.1); 
-      border-bottom: 1px solid var(--border-light);
-    }
+    .case-sticky-header.stuck { padding: 16px 32px; box-shadow: 0 4px 20px -4px rgba(0,20,50,0.1); border-bottom: 1px solid var(--border-light); }
 
     .client-tag {
       display: inline-flex;
@@ -125,10 +122,9 @@
     .header-top-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 20px;
+      align-items: flex-start;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
     }
 
     .case-title {
@@ -137,24 +133,57 @@
       letter-spacing: -0.03em;
       color: var(--text-primary);
       line-height: 1.25;
-      flex: 1;
+      transition: font-size 0.25s;
     }
 
-    /* Куратор всегда видим */
-    .coordinator-visible {
-      display: flex;
+    .coordinator-toggle {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
       background: var(--bg);
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 100px;
-      border: 1px solid var(--border-light);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
+    .coordinator-toggle:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .coordinator-toggle svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .coordinator-toggle .chevron { width: 12px; height: 12px; transition: transform 0.25s; margin-left: 2px; }
+    .coordinator-toggle.open .chevron { transform: rotate(180deg); }
+
+    .coordinator-dropdown {
+      display: none;
+      margin-top: 12px;
+      padding: 16px 20px;
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+      animation: slideDown 0.25s ease-out;
+    }
+    .coordinator-dropdown.visible { display: block; }
+
+    .coordinator-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
     .coordinator-avatar {
-      width: 36px;
-      height: 36px;
+      width: 44px; height: 44px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--primary), #50C3FF);
       display: flex;
@@ -167,109 +196,49 @@
       overflow: hidden;
     }
 
-    .coordinator-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .coordinator-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .coordinator-info {
-      display: flex;
-      flex-direction: column;
-    }
+    .coordinator-info { display: flex; flex-direction: column; }
+    .coordinator-name { font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
+    .coordinator-role { font-size: 0.78rem; color: var(--text-muted); }
 
-    .coordinator-name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      white-space: nowrap;
-    }
+    .coordinator-contacts { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    .coordinator-contacts {
-      display: flex;
-      gap: 6px;
-      margin-top: 2px;
-    }
-
-    .contact-icon {
+    .contact-btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
       text-decoration: none;
       transition: all 0.2s;
-    }
-
-    .contact-icon:hover {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-
-    .contact-icon svg {
-      width: 12px;
-      height: 12px;
-    }
-
-    .message-btn {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-      margin-left: 4px;
-    }
-    .message-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    /* Плашка ожиданий */
-    .expectation-banner {
-      background: var(--amber-light);
-      border-left: 4px solid var(--amber);
-      border-radius: var(--radius-md);
-      padding: 16px 20px;
-      margin: 0 32px 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      animation: slideDown 0.3s ease-out;
-    }
-
-    .expectation-icon {
-      font-size: 1.5rem;
-    }
-
-    .expectation-content {
-      flex: 1;
-    }
-
-    .expectation-title {
-      font-weight: 700;
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 4px;
-    }
-
-    .expectation-text {
+      border: 1px solid var(--border);
       color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.5;
+      background: var(--surface);
     }
+
+    .contact-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .contact-btn svg { width: 14px; height: 14px; }
+
+    .contact-icon-btn { display: none; }
 
     .progress-overview {
-      margin: 0 32px 16px;
+      margin: 28px 32px 0;
       display: flex;
       align-items: center;
       gap: 16px;
+      transition: margin 0.25s;
     }
 
     .progress-percent {
+      font-family: 'Manrope', system-ui, sans-serif;
       font-size: 2.2rem;
       font-weight: 800;
       color: var(--primary);
@@ -277,18 +246,15 @@
       letter-spacing: -0.04em;
     }
 
-    .progress-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
+    .progress-label { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
 
     .progress-track {
-      margin: 0 32px 32px;
+      margin: 20px 32px 0;
       height: 6px;
       background: var(--bg-subtle);
       border-radius: 100px;
       overflow: hidden;
+      transition: margin 0.25s;
     }
 
     .progress-fill {
@@ -298,12 +264,12 @@
       transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .stages-section { padding: 0 32px 32px; }
+    .stages-section { padding: 28px 32px 32px; }
 
-    /* Horizontal stages */
+    /* Desktop horizontal */
     .stages-horizontal {
       display: flex;
-      gap: 12px;
+      gap: 10px;
     }
 
     .stage-card-h {
@@ -311,20 +277,26 @@
       min-width: 0;
       border-radius: var(--radius-md);
       padding: 20px 16px 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
       border: 2px solid transparent;
       background: var(--bg);
       display: flex;
       flex-direction: column;
-      transition: all 0.25s ease;
+    }
+
+    .stage-card-h:hover {
+      border-color: var(--border);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .stage-card-h.active {
       background: var(--primary-light);
       border-color: var(--primary);
       box-shadow: var(--shadow-glow);
+      transform: translateY(-2px);
     }
-
-    .stage-card-h.pending { background: var(--bg); }
 
     .stage-number {
       width: 36px; height: 36px;
@@ -338,21 +310,14 @@
     }
 
     .completed .stage-number { background: var(--green); color: white; }
-    .active .stage-number { background: var(--primary); color: white; }
+    .active .stage-number { background: var(--primary); color: white; box-shadow: 0 4px 12px -2px rgba(27,161,250,0.4); }
     .pending .stage-number { background: var(--border); color: var(--text-muted); }
 
     .stage-title-h {
       font-weight: 700;
       font-size: 0.92rem;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       color: var(--text-primary);
-    }
-
-    .stage-value {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      font-style: italic;
     }
 
     .stage-status-badge {
@@ -372,27 +337,6 @@
     .active .stage-status-badge { background: rgba(27,161,250,0.15); color: var(--primary-dark); }
     .pending .stage-status-badge { background: var(--border-light); color: var(--text-muted); }
 
-    /* Индикатор ответственности */
-    .responsibility-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      margin-left: 8px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      background: var(--bg);
-    }
-    .responsibility-client {
-      background: var(--amber-light);
-      color: var(--amber);
-    }
-    .responsibility-expert {
-      background: var(--primary-light);
-      color: var(--primary-dark);
-    }
-
     .stage-details-h {
       margin-top: 12px;
       padding-top: 12px;
@@ -402,13 +346,22 @@
       line-height: 1.5;
       flex-grow: 1;
     }
-
+    
+    /* Стили для форматированного текста */
     .stage-details-h ul, .stage-details-h ol {
       padding-left: 20px;
       margin: 8px 0;
     }
-    .stage-details-h strong { font-weight: 700; color: var(--text-primary); }
-    .stage-details-h em { font-style: italic; }
+    .stage-details-h li {
+      margin-bottom: 4px;
+    }
+    .stage-details-h strong {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .stage-details-h em {
+      font-style: italic;
+    }
 
     .stage-footer-h {
       margin-top: 12px;
@@ -423,16 +376,30 @@
       gap: 5px;
       font-weight: 600;
       font-size: 0.8rem;
-      color: var(--primary-dark);
     }
 
-    .date-info svg { width: 14px; height: 14px; }
+    .date-info svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-    .materials-section {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 8px;
+    .manager-comment {
+      margin-top: 0px;
+      padding: 10px 14px;
+      background: rgba(27,161,250,0.06);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--primary);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    .manager-comment ul, .manager-comment ol {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+
+    .manager-comment-label {
+      font-weight: 700; color: var(--primary-dark);
+      font-size: 0.72rem; text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 3px;
     }
 
     .materials-link {
@@ -446,14 +413,9 @@
       color: var(--primary-dark);
       text-decoration: none;
       border: 1px solid var(--primary);
-      align-self: flex-start;
+      align-self: flex-end;
     }
     .materials-link:hover { background: var(--primary); color: white; }
-
-    .client-materials {
-      background: var(--amber-light);
-      border-color: var(--amber);
-    }
 
     /* Vertical stages */
     .stages-vertical {
@@ -486,6 +448,8 @@
       border-radius: var(--radius-md);
       padding: 18px 20px;
       border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s;
     }
 
     .stage-v.active .stage-v-body {
@@ -506,18 +470,16 @@
     .stage-v-title { font-weight: 700; font-size: 1.05rem; order: 2; }
     .stage-v-header .stage-status-badge { order: 1; }
 
-    .stage-v-value {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-bottom: 8px;
-    }
-
     .stage-v-details {
       margin-top: 12px; padding-top: 12px;
       border-top: 1px dashed rgba(0,0,0,0.08);
       font-size: 0.88rem; color: var(--text-secondary);
       line-height: 1.55; display: block;
+    }
+    
+    .stage-v-details ul, .stage-v-details ol {
+      padding-left: 20px;
+      margin: 8px 0;
     }
 
     .stage-v-footer {
@@ -532,15 +494,12 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
 
     .footer-update {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: var(--text-muted);
     }
 
     .update-dot {
@@ -548,46 +507,57 @@
       border-radius: 50%;
       background: var(--green);
       animation: pulse 2s ease-in-out infinite;
-    }
-
-    .refresh-btn {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: all 0.2s;
-      font-size: 1.1rem;
-    }
-
-    .refresh-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      transform: rotate(180deg);
+      flex-shrink: 0;
     }
 
     /* Mobile */
+    @media (max-width: 768px) {
+      .contact-btn { display: none; }
+      .contact-icon-btn {
+        display: flex;
+        align-items: center; justify-content: center;
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .contact-icon-btn:hover,
+      .contact-icon-btn:active {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .contact-icon-btn svg { width: 18px; height: 18px; }
+      .coordinator-contacts { gap: 10px; }
+    }
+
+    @media (min-width: 769px) {
+      .stages-horizontal { display: flex; }
+      .stages-vertical { display: none; }
+    }
+
     @media (max-width: 768px) {
       body { padding: 12px 8px; }
       .brand-bar { margin-bottom: 12px; }
       .stages-horizontal { display: none; }
       .stages-vertical { display: flex; }
-      .case-sticky-header { padding: 20px 20px 0; }
+      .case-sticky-header { padding: 24px 20px 0; }
       .case-sticky-header.stuck { padding: 12px 20px; }
-      .progress-overview { margin: 0 20px 16px; }
-      .progress-track { margin: 0 20px 24px; }
-      .stages-section { padding: 0 20px 24px; }
+      .progress-overview { margin: 20px 20px 0; }
+      .progress-track { margin: 16px 20px 0; }
+      .stages-section { padding: 24px 20px 24px; }
       .case-footer { padding: 0 20px 24px; }
-      .header-top-row { flex-direction: column; align-items: flex-start; }
+      .header-top-row { flex-direction: column; }
       .case-title { font-size: 1.3rem; }
       .progress-percent { font-size: 1.8rem; }
-      .coordinator-visible { align-self: flex-start; margin-top: 8px; }
-      .expectation-banner { margin: 0 20px 20px; }
+    }
+
+    @media (max-width: 420px) {
+      .case-card { border-radius: var(--radius-lg); }
     }
 
     /* Scrollable */
@@ -595,15 +565,18 @@
       overflow-x: auto;
       padding-bottom: 8px;
       scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
     }
-    .stages-horizontal.scrollable .stage-card-h { flex: 0 0 260px; }
+
+    .stages-horizontal.scrollable .stage-card-h { flex: 0 0 240px; }
 
     @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
     @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
     @keyframes stageEnter { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
     .stage-animate { animation: stageEnter 0.4s ease-out both; }
+
     .flash-update { animation: flashBorder 1.5s ease-out; }
     @keyframes flashBorder {
       0% { box-shadow: 0 0 0 0 rgba(27,161,250,0.5); }
@@ -617,7 +590,7 @@
 <div class="brand-bar">
   <a href="#" class="brand-logo">
     <img src="https://i127.fastpic.org/big/2026/0305/f0/6ae5fa7d2cd11672b3195a7cda0a8cf0.png" alt="Emelin.Pro" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-    <div class="brand-logo-text">EMELIN<span>.PRO</span></div>
+    <div class="brand-logo-text" style="display:none;">EMELIN<span>.PRO</span></div>
   </a>
 </div>
 
@@ -625,7 +598,7 @@
 
   <div class="case-sticky-header" id="stickyHeader">
     <div class="client-tag">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
       <span id="clientNameDisplay">—</span>
     </div>
 
@@ -634,23 +607,22 @@
     <div class="header-top-row">
       <h1 class="case-title" id="caseTitleDisplay">—</h1>
 
-      <!-- Куратор всегда видим -->
-      <div class="coordinator-visible" id="coordinatorVisible" style="display:none;">
-        <div class="coordinator-avatar" id="coordAvatar">—</div>
-        <div class="coordinator-info">
-          <div class="coordinator-name" id="coordName">—</div>
-          <div class="coordinator-contacts" id="coordContacts"></div>
-        </div>
+      <div class="coordinator-toggle" id="coordToggle" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Куратор</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </div>
     </div>
 
-    <!-- Плашка ожиданий от клиента -->
-    <div class="expectation-banner" id="expectationBanner" style="display: none;">
-      <div class="expectation-icon">⚠️</div>
-      <div class="expectation-content">
-        <div class="expectation-title">Требуется ваше участие</div>
-        <div class="expectation-text" id="expectationText"></div>
+    <div class="coordinator-dropdown" id="coordDropdown">
+      <div class="coordinator-top">
+        <div class="coordinator-avatar" id="coordAvatar">—</div>
+        <div class="coordinator-info">
+          <div class="coordinator-name" id="coordName">—</div>
+          <div class="coordinator-role" id="coordRole"></div>
+        </div>
       </div>
+      <div class="coordinator-contacts" id="coordContacts"></div>
     </div>
 
     <div class="progress-overview">
@@ -672,7 +644,6 @@
     <div class="footer-update">
       <div class="update-dot"></div>
       <span id="updateTime">Загрузка…</span>
-      <button class="refresh-btn" id="refreshBtn" title="Обновить вручную">↻</button>
     </div>
   </div>
 
@@ -703,97 +674,13 @@
       whatsapp: '79991234567'
     },
     stages: [
-      { 
-        id:0, 
-        title:'Брифинг и анализ задачи', 
-        description:'Клиентский менеджер уточняет основные моменты задачи и ожидания по результату.', 
-        summary:'Проведён первичный бриф, зафиксированы цели.', 
-        nextActions:'Ожидайте коммерческое предложение.', 
-        value_proposition:'Собираем исходные данные, чтобы ничего не упустить',
-        status:'completed', 
-        startDate:'2026-03-01', 
-        endDate:'2026-03-02', 
-        client_materials:'',
-        expert_materials:''
-      },
-      { 
-        id:1, 
-        title:'Подготовка коммерческого предложения', 
-        description:'Менеджер готовит КП на основе брифа, берёт тайм-аут.', 
-        summary:'КП подготовлено и направлено клиенту.', 
-        nextActions:'Рассмотрите предложение и дайте обратную связь.', 
-        value_proposition:'Прозрачные условия и стоимость работы',
-        status:'completed', 
-        startDate:'2026-03-03', 
-        endDate:'2026-03-05', 
-        client_materials:'',
-        expert_materials:'https://example.com/kp.pdf'
-      },
-      { 
-        id:2, 
-        title:'Согласование и оплата', 
-        description:'Подписание соглашения, фиксация договорённостей, внесение установочного платежа.', 
-        summary:'Договор подписан, оплата поступила.', 
-        nextActions:'После оплаты передайте документы и информацию.', 
-        value_proposition:'Фиксируем наши обязательства перед вами',
-        status:'active', 
-        startDate:'2026-03-06', 
-        endDate:'2026-03-09', 
-        client_materials:'https://example.com/anketa.pdf',
-        expert_materials:'https://example.com/dogovor.pdf'
-      },
-      { 
-        id:3, 
-        title:'Передача информации', 
-        description:'Клиент предоставляет необходимые документы, даёт пояснения.', 
-        summary:'Все материалы получены.', 
-        nextActions:'Передайте документы и пояснения эксперту.', 
-        value_proposition:'Чем больше данных — тем точнее анализ',
-        status:'pending', 
-        startDate:'2026-03-10', 
-        endDate:'2026-03-12', 
-        client_materials:'',
-        expert_materials:''
-      },
-      { 
-        id:4, 
-        title:'Экспертный анализ', 
-        description:'Эксперт изучает материалы, при необходимости задаёт уточняющие вопросы.', 
-        summary:'Анализ завершён, подготовлены выводы.', 
-        nextActions:'Эксперт свяжется для уточнений.', 
-        value_proposition:'Ищем скрытые риски, чтобы защитить ваши активы',
-        status:'pending', 
-        startDate:'2026-03-13', 
-        endDate:'2026-03-20', 
-        client_materials:'',
-        expert_materials:''
-      },
-      { 
-        id:5, 
-        title:'Презентация результатов', 
-        description:'Эксперт представляет итоги анализа, модели поведения, рекомендованный вариант.', 
-        summary:'Презентация проведена, отчёт передан.', 
-        nextActions:'Ознакомьтесь с результатами, подготовьте вопросы.', 
-        value_proposition:'Понятные выводы и готовые решения',
-        status:'pending', 
-        startDate:'2026-03-21', 
-        endDate:'2026-03-22', 
-        client_materials:'',
-        expert_materials:'https://example.com/presentation.pdf'
-      },
-      { 
-        id:6, 
-        title:'Обратная связь', 
-        description:'Клиентский менеджер уточняет удовлетворённость работой эксперта.', 
-        summary:'Обратная связь получена, определены следующие шаги.', 
-        nextActions:'Сообщите ваши впечатления и планы.', 
-        value_proposition:'Ваше мнение помогает нам становиться лучше',
-        status:'pending', 
-        startDate:'2026-03-23', 
-        endDate:'2026-03-24', 
-        client_materials:'',
-        expert_materials:''
-      }
+      { id:0, title:'Брифинг и анализ задачи', description:'Клиентский менеджер уточняет основные моменты задачи и ожидания по результату.', summary:'Проведён первичный бриф, зафиксированы цели.', nextActions:'Ожидайте коммерческое предложение.', status:'completed', startDate:'2026-03-01', endDate:'2026-03-02', materials:'' },
+      { id:1, title:'Подготовка коммерческого предложения', description:'Менеджер готовит КП на основе брифа, берёт тайм-аут.', summary:'КП подготовлено и направлено клиенту.', nextActions:'Рассмотрите предложение и дайте обратную связь.', status:'completed', startDate:'2026-03-03', endDate:'2026-03-05', materials:'https://example.com/kp.pdf' },
+      { id:2, title:'Согласование и оплата', description:'Подписание соглашения, фиксация договорённостей, внесение установочного платежа или ретейнера.', summary:'Договор подписан, оплата поступила.', nextActions:'После оплаты передайте документы и информацию.', status:'active', startDate:'2026-03-06', endDate:'2026-03-09', materials:'' },
+      { id:3, title:'Передача информации', description:'Клиент предоставляет необходимые документы, даёт пояснения.', summary:'Все материалы получены.', nextActions:'Передайте документы и пояснения эксперту.', status:'pending', startDate:'2026-03-10', endDate:'2026-03-12', materials:'' },
+      { id:4, title:'Экспертный анализ', description:'Эксперт изучает материалы, при необходимости задаёт уточняющие вопросы.', summary:'Анализ завершён, подготовлены выводы.', nextActions:'Эксперт свяжется для уточнений.', status:'pending', startDate:'2026-03-13', endDate:'2026-03-20', materials:'' },
+      { id:5, title:'Презентация результатов', description:'Эксперт представляет итоги анализа, модели поведения, рекомендованный вариант, передаёт письменный отчёт.', summary:'Презентация проведена, отчёт передан.', nextActions:'Ознакомьтесь с результатами, подготовьте вопросы.', status:'pending', startDate:'2026-03-21', endDate:'2026-03-22', materials:'https://example.com/presentation.pdf' },
+      { id:6, title:'Обратная связь', description:'Клиентский менеджер уточняет удовлетворённость работой эксперта и готовность к реализации.', summary:'Обратная связь получена, определены следующие шаги.', nextActions:'Сообщите ваши впечатления и планы.', status:'pending', startDate:'2026-03-23', endDate:'2026-03-24', materials:'' }
     ]
   };
 
@@ -805,10 +692,7 @@
       const r = await fetch(`${BASE_URL}/${BIN_ID}/latest`, { headers: { 'X-Master-Key': API_KEY } });
       if (!r.ok) throw new Error();
       return (await r.json()).record;
-    } catch(e) { 
-      console.warn('Ошибка загрузки, используем defaultData');
-      return defaultData; 
-    }
+    } catch(e) { return defaultData; }
   }
 
   function statusText(s) {
@@ -850,22 +734,6 @@
     return count;
   }
 
-  function remainingWorkingDays(end) {
-    if (!end) return null;
-    const endDate = new Date(end + 'T23:59:59');
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    if (today > endDate) return 0;
-    let count = 0;
-    const current = new Date(today);
-    while (current <= endDate) {
-      const day = current.getDay();
-      if (day !== 0 && day !== 6) count++;
-      current.setDate(current.getDate() + 1);
-    }
-    return count;
-  }
-
   function getOverallProgress(stages) {
     const dates = stages.reduce((acc, s) => {
       if (s.startDate) acc.push(new Date(s.startDate));
@@ -883,10 +751,14 @@
     return Math.round((elapsed / total) * 100);
   }
 
+  // Функция для преобразования текста с форматированием в HTML
   function formatText(text) {
     if (!text) return '';
+    
+    // Экранируем HTML-спецсимволы, чтобы избежать XSS
     let escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     
+    // Преобразуем маркированные списки (строки, начинающиеся с дефиса)
     const ulRegex = /(?:^|\n)- (.+?)(?=\n- |\n\n|$)/g;
     escaped = escaped.replace(ulRegex, (match, p1) => {
       const items = match.split('\n').map(line => {
@@ -896,6 +768,7 @@
       return '<ul>' + items.map(item => `<li>${item}</li>`).join('') + '</ul>';
     });
     
+    // Преобразуем нумерованные списки (строки, начинающиеся с цифры и точки)
     const olRegex = /(?:^|\n)\d+\. (.+?)(?=\n\d+\. |\n\n|$)/g;
     escaped = escaped.replace(olRegex, (match, p1) => {
       const items = match.split('\n').map(line => {
@@ -905,11 +778,23 @@
       return '<ol>' + items.map(item => `<li>${item}</li>`).join('') + '</ol>';
     });
     
+    // Жирный текст (**текст**)
     escaped = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // Курсив (*текст*)
     escaped = escaped.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    
+    // Заменяем одиночные переносы строк на <br>, если они не внутри списков
+    // Это упрощённо; для более точной обработки нужен парсер
     escaped = escaped.replace(/\n/g, '<br>');
     
     return escaped;
+  }
+
+  function getDetailText(stage) {
+    if (stage.status === 'completed') return stage.summary || '—';
+    if (stage.status === 'active') return stage.description || '—';
+    return stage.nextActions || '—';
   }
 
   function formatDateRange(start, end) {
@@ -947,66 +832,94 @@
   }
 
   // SVGs
-  const phoneSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>';
+  const phoneSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>';
   const waSvg='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.111.547 4.099 1.504 5.832L0 24l6.335-1.652A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.903 0-3.727-.528-5.313-1.527l-.38-.228-3.758.981.999-3.648-.25-.396A9.768 9.768 0 0 1 2.182 12c0-5.423 4.395-9.818 9.818-9.818S21.818 6.577 21.818 12s-4.395 9.818-9.818 9.818z"/></svg>';
   const tgSvg='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 1 0 24 12.056A12.01 12.01 0 0 0 11.944 0Zm5.654 8.26-1.97 9.293c-.146.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.334-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.832.928Z"/></svg>';
-  const clockSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+  const clockSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
 
-  // Обработка ошибки аватарки
+  // Coordinator toggle
+  const coordToggle = document.getElementById('coordToggle');
+  const coordDropdown = document.getElementById('coordDropdown');
+  if (coordToggle) {
+    coordToggle.addEventListener('click', ()=>{
+      coordToggle.classList.toggle('open');
+      coordDropdown.classList.toggle('visible');
+    });
+    document.addEventListener('click', e=>{
+      if (!coordToggle.contains(e.target) && !coordDropdown.contains(e.target)) {
+        coordToggle.classList.remove('open');
+        coordDropdown.classList.remove('visible');
+      }
+    });
+  }
+
   function handleAvatarError(img) {
     const parent = img.parentNode;
     const initials = parent.getAttribute('data-initials') || '?';
     parent.innerHTML = initials;
   }
 
-  // Кнопка обновления
-  document.getElementById('refreshBtn').addEventListener('click', () => {
-    fetchAndRender();
-  });
+  let stickyObserver = null;
+  function initSticky(count) {
+    const header = document.getElementById('stickyHeader');
+    if (count >= 5) {
+      header.classList.add('is-sticky');
+      if (!stickyObserver) {
+        let sentinel = document.getElementById('stickySentinel');
+        if (!sentinel) {
+          sentinel = document.createElement('div');
+          sentinel.id = 'stickySentinel';
+          sentinel.style.cssText = 'height:1px;position:absolute;top:0;left:0;right:0;pointer-events:none;';
+          header.parentNode.insertBefore(sentinel, header);
+        }
+        stickyObserver = new IntersectionObserver(
+          ([e]) => header.classList.toggle('stuck', !e.isIntersecting),
+          { threshold: 1, rootMargin: '-1px 0px 0px 0px' }
+        );
+        stickyObserver.observe(sentinel);
+      }
+    } else {
+      header.classList.remove('is-sticky', 'stuck');
+    }
+  }
 
   function render(data) {
     document.getElementById('clientNameDisplay').textContent = data.clientName || '—';
     document.getElementById('caseTitleDisplay').textContent = data.caseName || '—';
 
     const exp = data.expert || {};
-    const coordinatorVisible = document.getElementById('coordinatorVisible');
-    
     if (exp.name) {
-      coordinatorVisible.style.display = 'flex';
+      coordToggle.style.display = '';
       const av = document.getElementById('coordAvatar');
       const initials = getInitials(exp.name);
       av.setAttribute('data-initials', initials);
-      
       if (exp.avatar) {
         av.innerHTML = `<img src="${exp.avatar}" alt="${exp.name}" onerror="this.onerror=null; this.parentNode.innerHTML='${initials}';">`;
       } else {
         av.textContent = initials;
       }
-      
       document.getElementById('coordName').textContent = exp.name;
-      
-      const contacts = document.getElementById('coordContacts');
-      contacts.innerHTML = '';
-      
-      // Телефон
+      document.getElementById('coordRole').textContent = '';
+
+      const c = document.getElementById('coordContacts');
+      c.innerHTML = '';
       if (exp.phone) {
         const cl = exp.phone.replace(/[^\d+]/g, '');
-        contacts.innerHTML += `<a class="contact-icon" href="tel:${cl}" title="Позвонить">${phoneSvg}</a>`;
+        c.innerHTML += `<a class="contact-btn" href="tel:${cl}">${phoneSvg}<span>Позвонить</span></a>`;
+        c.innerHTML += `<a class="contact-icon-btn" href="tel:${cl}" title="Позвонить">${phoneSvg}</a>`;
       }
-      
-      // WhatsApp
-      if (exp.whatsapp) {
-        const wa = exp.whatsapp.replace(/[^\d]/g, '');
-        contacts.innerHTML += `<a class="contact-icon" href="https://wa.me/${wa}" target="_blank" title="WhatsApp">${waSvg}</a>`;
-      }
-      
-      // Telegram
       if (exp.telegram) {
         const tg = exp.telegram.replace('@','');
-        contacts.innerHTML += `<a class="contact-icon message-btn" href="https://t.me/${tg}" target="_blank" title="Telegram">${tgSvg}</a>`;
+        c.innerHTML += `<a class="contact-btn" href="https://t.me/${tg}" target="_blank">${tgSvg}<span>Telegram</span></a>`;
+        c.innerHTML += `<a class="contact-icon-btn" href="https://t.me/${tg}" target="_blank" title="Telegram">${tgSvg}</a>`;
+      }
+      if (exp.whatsapp) {
+        const wa = exp.whatsapp.replace(/[^\d]/g, '');
+        c.innerHTML += `<a class="contact-btn" href="https://wa.me/${wa}" target="_blank">${waSvg}<span>WhatsApp</span></a>`;
+        c.innerHTML += `<a class="contact-icon-btn" href="https://wa.me/${wa}" target="_blank" title="WhatsApp">${waSvg}</a>`;
       }
     } else {
-      coordinatorVisible.style.display = 'none';
+      coordToggle.style.display = 'none';
     }
 
     const stages = data.stages || [];
@@ -1014,94 +927,53 @@
     const completedCount = stages.filter(s => s.status === 'completed').length;
     const activeIndex = stages.findIndex(s => s.status === 'active');
     const overallPercent = getOverallProgress(stages);
-    
     document.getElementById('progressPercent').textContent = overallPercent + '%';
     document.getElementById('progressFill').style.width = overallPercent + '%';
     document.getElementById('progressLabel').textContent =
       `Этап ${completedCount + (activeIndex >= 0 ? 1 : 0)} из ${total}`;
 
-    // Проверяем, есть ли ожидания от клиента в активном этапе
-    const activeStage = stages.find(s => s.status === 'active');
-    const expectationBanner = document.getElementById('expectationBanner');
-    const expectationText = document.getElementById('expectationText');
-    
-    if (activeStage && activeStage.nextActions) {
-      expectationBanner.style.display = 'flex';
-      expectationText.innerHTML = formatText(activeStage.nextActions);
-    } else {
-      expectationBanner.style.display = 'none';
-    }
-
     // Horizontal stages
     const hC = document.getElementById('stagesH');
     hC.innerHTML = '';
-    
     stages.forEach((s, i) => {
       const card = document.createElement('div');
       card.className = `stage-card-h ${s.status} stage-animate`;
       card.style.animationDelay = `${i*0.08}s`;
 
-      const formattedDescription = formatText(
-        s.status === 'completed' ? s.summary || '' :
-        s.status === 'active' ? s.description || '' :
-        s.nextActions || ''
-      );
+      const formattedDescription = formatText(getDetailText(s));
+      
+      let expectationsHtml = '';
+      if (s.status === 'active' && s.nextActions) {
+        expectationsHtml = `<div class="manager-comment"><div class="manager-comment-label">Ожидания от клиента</div>${formatText(s.nextActions)}</div>`;
+      }
 
-      // Индикатор ответственности
-      const responsibilityClass = (s.status === 'active' && s.nextActions) ? 'responsibility-client' : 'responsibility-expert';
-      const responsibilityText = (s.status === 'active' && s.nextActions) ? 'Требуются действия' : 'В работе у эксперта';
-      const responsibilityHtml = s.status === 'active' ? 
-        `<span class="responsibility-indicator ${responsibilityClass}">● ${responsibilityText}</span>` : '';
-
-      // Польза этапа
-      const valueHtml = s.value_proposition ? 
-        `<div class="stage-value">✨ ${s.value_proposition}</div>` : '';
-
-      // Прогноз для активного этапа
       let dateHtml = '';
       if (s.status === 'completed' && s.startDate && s.endDate) {
         dateHtml = `<div class="date-info">${clockSvg} ${formatDateRange(s.startDate, s.endDate)}</div>`;
       } else if (s.status === 'active') {
         const totalDays = countWorkingDays(s.startDate, s.endDate);
         const elapsed = elapsedWorkingDays(s.startDate);
-        const remaining = remainingWorkingDays(s.endDate);
-        
-        if (totalDays !== null && elapsed !== null && remaining !== null) {
-          const remainingText = remaining === 0 ? 'сегодня' : `осталось ${remaining} рабочих дней`;
-          
-          // Прогноз даты
-          const forecastDate = new Date();
-          forecastDate.setDate(forecastDate.getDate() + remaining);
-          const forecastStr = forecastDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-          
-          dateHtml = `<div class="date-info">${clockSvg} в работе ${elapsed} из ${totalDays} дней (${remainingText}, примерно до ${forecastStr})</div>`;
+        if (totalDays !== null && elapsed !== null) {
+          dateHtml = `<div class="date-info">${clockSvg} в работе ${elapsed} из ${totalDays} дней</div>`;
         }
       } else if (s.status === 'pending' && s.startDate) {
-        dateHtml = `<div class="date-info" style="color: var(--text-muted);">${clockSvg} начнётся ${formatDate(s.startDate)}</div>`;
+        dateHtml = `<div class="date-info" style="color: var(--text-muted);">${clockSvg} ${formatDate(s.startDate)}</div>`;
       }
 
-      // Материалы (раздельные)
       let materialsHtml = '';
-      if (s.client_materials || s.expert_materials) {
-        materialsHtml = '<div class="materials-section">';
-        if (s.client_materials) {
-          materialsHtml += `<a href="${s.client_materials}" target="_blank" class="materials-link client-materials">📋 Нужно предоставить</a>`;
-        }
-        if (s.expert_materials) {
-          materialsHtml += `<a href="${s.expert_materials}" target="_blank" class="materials-link">📎 Результаты эксперта</a>`;
-        }
-        materialsHtml += '</div>';
+      if (s.materials) {
+        materialsHtml = `<a href="${s.materials}" target="_blank" class="materials-link">📎 материалы</a>`;
       }
 
       card.innerHTML = `
         <div class="stage-number">${i+1}</div>
-        <div class="stage-status-badge">${statusText(s.status)}${responsibilityHtml}</div>
+        <div class="stage-status-badge">${statusText(s.status)}</div>
         <div class="stage-title-h">${s.title}</div>
-        ${valueHtml}
         <div class="stage-details-h">${formattedDescription}</div>
         <div class="stage-footer-h">
-          ${dateHtml}
+          ${expectationsHtml}
           ${materialsHtml}
+          ${dateHtml}
         </div>
       `;
 
@@ -1110,28 +982,20 @@
 
     hC.classList.toggle('scrollable', stages.length >= 5);
 
-    // Vertical stages (аналогично горизонтальным, но с другой вёрсткой)
+    // Vertical stages
     const vC = document.getElementById('stagesV');
     vC.innerHTML = '';
-    
     stages.forEach((s, i) => {
       const el = document.createElement('div');
       el.className = `stage-v ${s.status} stage-animate`;
       el.style.animationDelay = `${i*0.08}s`;
 
-      const formattedDescription = formatText(
-        s.status === 'completed' ? s.summary || '' :
-        s.status === 'active' ? s.description || '' :
-        s.nextActions || ''
-      );
+      const formattedDescription = formatText(getDetailText(s));
 
-      const responsibilityClass = (s.status === 'active' && s.nextActions) ? 'responsibility-client' : 'responsibility-expert';
-      const responsibilityText = (s.status === 'active' && s.nextActions) ? 'Требуются действия' : 'В работе у эксперта';
-      const responsibilityHtml = s.status === 'active' ? 
-        `<span class="responsibility-indicator ${responsibilityClass}">● ${responsibilityText}</span>` : '';
-
-      const valueHtml = s.value_proposition ? 
-        `<div class="stage-v-value">✨ ${s.value_proposition}</div>` : '';
+      let expectationsHtml = '';
+      if (s.status === 'active' && s.nextActions) {
+        expectationsHtml = `<div class="manager-comment"><div class="manager-comment-label">Ожидания от клиента</div>${formatText(s.nextActions)}</div>`;
+      }
 
       let dateHtml = '';
       if (s.status === 'completed' && s.startDate && s.endDate) {
@@ -1139,43 +1003,30 @@
       } else if (s.status === 'active') {
         const totalDays = countWorkingDays(s.startDate, s.endDate);
         const elapsed = elapsedWorkingDays(s.startDate);
-        const remaining = remainingWorkingDays(s.endDate);
-        
-        if (totalDays !== null && elapsed !== null && remaining !== null) {
-          const remainingText = remaining === 0 ? 'сегодня' : `осталось ${remaining} рабочих дней`;
-          const forecastDate = new Date();
-          forecastDate.setDate(forecastDate.getDate() + remaining);
-          const forecastStr = forecastDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-          dateHtml = `<div class="date-info">${clockSvg} в работе ${elapsed} из ${totalDays} дней (${remainingText}, до ${forecastStr})</div>`;
+        if (totalDays !== null && elapsed !== null) {
+          dateHtml = `<div class="date-info">${clockSvg} в работе ${elapsed} из ${totalDays} дней</div>`;
         }
       } else if (s.status === 'pending' && s.startDate) {
-        dateHtml = `<div class="date-info" style="color: var(--text-muted);">${clockSvg} начнётся ${formatDate(s.startDate)}</div>`;
+        dateHtml = `<div class="date-info" style="color: var(--text-muted);">${clockSvg} ${formatDate(s.startDate)}</div>`;
       }
 
       let materialsHtml = '';
-      if (s.client_materials || s.expert_materials) {
-        materialsHtml = '<div class="materials-section">';
-        if (s.client_materials) {
-          materialsHtml += `<a href="${s.client_materials}" target="_blank" class="materials-link client-materials">📋 Нужно предоставить</a>`;
-        }
-        if (s.expert_materials) {
-          materialsHtml += `<a href="${s.expert_materials}" target="_blank" class="materials-link">📎 Результаты эксперта</a>`;
-        }
-        materialsHtml += '</div>';
+      if (s.materials) {
+        materialsHtml = `<a href="${s.materials}" target="_blank" class="materials-link">📎 материалы</a>`;
       }
 
       el.innerHTML = `
         <div class="stage-number">${i+1}</div>
         <div class="stage-v-body">
           <div class="stage-v-header">
-            <div class="stage-status-badge">${statusText(s.status)}${responsibilityHtml}</div>
+            <div class="stage-status-badge">${statusText(s.status)}</div>
             <div class="stage-v-title">${s.title}</div>
           </div>
-          ${valueHtml}
           <div class="stage-v-details">${formattedDescription}</div>
           <div class="stage-v-footer">
-            ${dateHtml}
+            ${expectationsHtml}
             ${materialsHtml}
+            ${dateHtml}
           </div>
         </div>
       `;
@@ -1183,6 +1034,7 @@
       vC.appendChild(el);
     });
 
+    initSticky(stages.length);
     updateTimestamp();
   }
 
@@ -1193,7 +1045,7 @@
     const h = hashData(data);
     if (lastDataHash && h !== lastDataHash) {
       document.getElementById('caseCard').classList.add('flash-update');
-      setTimeout(() => document.getElementById('caseCard').classList.remove('flash-update'), 1500);
+      setTimeout(()=>document.getElementById('caseCard').classList.remove('flash-update'), 1500);
     }
     lastDataHash = h;
     render(data);
